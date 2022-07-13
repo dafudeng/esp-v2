@@ -16,6 +16,7 @@ package grpc_health_check_test
 
 import (
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"testing"
 	"time"
@@ -82,6 +83,19 @@ func TestHealthCheckGrpcBackend(t *testing.T) {
 			if err := s.Setup(args); err != nil {
 				t.Fatalf("fail to setup test env, %v", err)
 			}
+
+			listShelvesUrl := fmt.Sprintf("http://%v:%v/v1/shelves", platform.GetLoopbackAddress(), s.Ports().ListenerPort)
+			resp, err := http.Get(listShelvesUrl)
+			if err != nil {
+				t.Fatalf("fail to healthz url: err: %v", err)
+			}
+
+			body, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				t.Fatalf("Failed in read response: %v", err)
+			}
+			fmt.Println(body)
+
 			healthUrl := fmt.Sprintf("http://%v:%v/healthz", platform.GetLoopbackAddress(), s.Ports().ListenerPort)
 
 			for idx, period := range tc.periods {

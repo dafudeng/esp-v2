@@ -115,6 +115,17 @@ var (
 				},
 				Version: "1.0.0",
 			},
+			{
+				Name: "grpc.health.v1.Health",
+				Methods: []*apipb.Method{
+					{
+						Name: "Check",
+					},
+					{
+						Name: "Watch",
+					},
+				},
+			},
 		},
 		Http: &annotationspb.Http{
 			Rules: []*annotationspb.HttpRule{
@@ -219,6 +230,12 @@ var (
 						Get: "/v1/shelves/{shelf=*}/books/{book}",
 					},
 				},
+				/*{
+					Selector: "grpc.health.v1.Health.Check",
+					Pattern: &annotationspb.HttpRule_Get{
+						Get: "/health/check",
+					},
+				},*/
 			},
 		},
 		Authentication: &confpb.Authentication{
@@ -254,7 +271,7 @@ var (
 						},
 					},
 				},
-				{
+				/*{
 					Selector: "endpoints.examples.bookstore.Bookstore.ListShelves",
 					Requirements: []*confpb.AuthRequirement{
 						{
@@ -262,7 +279,7 @@ var (
 							Audiences:  "bookstore_test_client.cloud.goog",
 						},
 					},
-				},
+				},*/
 				{
 					Selector: "endpoints.examples.bookstore.Bookstore.DeleteShelf",
 					Requirements: []*confpb.AuthRequirement{
@@ -283,6 +300,10 @@ var (
 					Selector:               "endpoints.examples.bookstore.Bookstore.Unspecified",
 					AllowUnregisteredCalls: true,
 				},
+				/*{
+					Selector:               "endpoints.examples.bookstore.Bookstore.ListShelves",
+					SkipServiceControl: true,
+				},*/
 			},
 		},
 	}
